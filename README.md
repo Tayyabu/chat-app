@@ -44,7 +44,7 @@ npm install
 ### Configure Environment
 Create a `.env` file in the frontend folder:
 ```env
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=http://localhost:3000
 ```
 
 ### Launch Development Server
@@ -79,7 +79,7 @@ Access the application at `http://localhost:3000`
 
 ### Frontend Configuration (.env)
 - **VITE_BACKEND_PORT**: Backend API URL
-  - Example: `http://localhost:5000`
+  - Example: `http://localhost:3000`
 
 ## Technology Stack
 
