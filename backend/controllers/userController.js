@@ -40,15 +40,16 @@ const getUser = asyncHandler(async (req, res) => {
     where: { id },
     select: { id: true, email: true, chats: true, profilePic: true },
   });
- 
-  
+
   if (!user)
     return res.json({
       errors: {
         message: "404 not found",
       },
     });
-  user.profilePic = `http://localhost:3000/users/${user.profilePic}`;
+  user.profilePic = `http://localhost:${process.env.PORT || 3000}/users/${
+    user.profilePic
+  }`;
   return res.json(user);
 });
 
@@ -107,9 +108,7 @@ const updateUser = asyncHandler(async (req, res) => {
         ],
       });
 
-    const roles = Array.from(
-      new Set([...data.roles])
-    );
+    const roles = Array.from(new Set([...data.roles]));
     console.log(roles);
 
     if (data.password) {
