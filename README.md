@@ -78,7 +78,7 @@ Access the application at `http://localhost:3000`
 - **PORT**: Backend server port (default: 5000)
 
 ### Frontend Configuration (.env)
-- **VITE_BACKEND_PORT**: Backend API URL
+- **VITE_API_URL**: Backend API URL
   - Example: `http://localhost:3000`
 
 ## Technology Stack
