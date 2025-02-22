@@ -1,23 +1,25 @@
 import { SubmitHandler } from "react-hook-form";
 import type { LoginFormInputs } from "../components/AuthForm";
 import LoginForm from "../components/AuthForm";
-import useAuthStore from "../state/authStore.ts";
-import { Link, useNavigate } from "react-router-dom";
+
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import { login } from "../state/authStore.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import { customToast, customToastError } from "../lib/utils.ts";
+
 function Login() {
   const navigate = useNavigate();
-  const { accessToken } = useAuthStore();
+  const location = useLocation()
+  const from = (location.state?.from) || "/"
   const client = useQueryClient();
   const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     try {
-      await login(data);
+   const response =   await login(data);
       client.invalidateQueries({ queryKey: ["chatGroups", "users"] });
-      if (accessToken) {
+      if (response?.status===200 || response?.status===201) {
         customToast(`You are logged in as ${data.email}`);
       }
-      navigate("/");
+      navigate(["/","/profile"].includes(from)?from:"/",{replace:true});
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (typeof error.status === "number") {

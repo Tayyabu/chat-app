@@ -32,7 +32,7 @@ const registerController = expressAsyncHandler(async (req, res) => {
       },
     
   });
-  return res.status(201).json(user);
+  return res.status(201).json({messsage:"You are registered"});
 });
 
 module.exports = registerController;

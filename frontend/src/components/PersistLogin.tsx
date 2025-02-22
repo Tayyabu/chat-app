@@ -20,10 +20,12 @@ function PersistLogin() {
             withCredentials: true,
           });
       if(!response.data.accessToken) return navigate("/")
+      
           useAuthStore.setState((pre) => ({
             ...pre,
             accessToken: response.data.accessToken,
             id: response.data.id,
+            roles:response.data.roles
           }));
       
           return response.data.accessToken;

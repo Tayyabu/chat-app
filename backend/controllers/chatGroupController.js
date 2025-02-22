@@ -30,9 +30,17 @@ const getAllChats = asyncHandler(async (req, res) => {
       adminId: true,
       createdAt: true,
       updatedAt: true,
+      users: {select:{id:true,email:true}},
     },
   });
-  return res.json(chatGroups);
+
+
+  return res.json(
+    chatGroups.map((chat) => ({
+      ...chat,
+      users: chat.users.filter((u) => u.id !== chat.adminId),
+    }))
+  );
 });
 const createChat = asyncHandler(async (req, res) => {
   const {
@@ -41,7 +49,7 @@ const createChat = asyncHandler(async (req, res) => {
     error,
   } = chatSchemaForAdminPanel.safeParse(req.body);
 
-  if (success === true) {
+  if (success) {
     const duplicate = await db.chat.findFirst({
       where: { title: chatData.title },
     });
@@ -118,7 +126,6 @@ const updateChat = asyncHandler(async (req, res) => {
       errors: [
         {
           message: `Chat with this id ${id}  not found`,
-          
         },
       ],
       chat: null,
@@ -130,7 +137,7 @@ const updateChat = asyncHandler(async (req, res) => {
     error,
   } = chatSchemaForAdminPanel.safeParse(req.body);
 
-  if (success === true) {
+  if (success) {
     const duplicate = await db.chat.findFirst({
       where: { title: chatData.title },
     });
@@ -153,7 +160,6 @@ const updateChat = asyncHandler(async (req, res) => {
             field: "users",
           },
         ],
-
       });
     const chatAdmin = await db.user.findUnique({
       where: { id: chatData.adminId },
@@ -167,7 +173,6 @@ const updateChat = asyncHandler(async (req, res) => {
             field: "adminId",
           },
         ],
-
       });
     }
     if (exists.users.map((user) => user.id).includes(chatAdmin.id)) {
@@ -179,6 +184,7 @@ const updateChat = asyncHandler(async (req, res) => {
           adminId: chatData.adminId,
           title: chatData.title,
           users: {
+            disconnect:exists.users,
             connect: chatData.users,
           },
         },
@@ -191,6 +197,7 @@ const updateChat = asyncHandler(async (req, res) => {
         adminId: chatData.adminId,
         title: chatData.title,
         users: {
+          disconnect:exists.users,
           connect: chatData.users.concat([
             { id: chatAdmin.id, email: chatAdmin.email },
           ]),
@@ -221,7 +228,6 @@ const deleteChat = asyncHandler(async (req, res) => {
       errors: [
         {
           message: `Chat with this id ${id}  not found`,
-         
         },
       ],
       chat: null,
@@ -236,5 +242,5 @@ module.exports = {
   getAllChats,
   createChat,
   updateChat,
-  deleteChat
+  deleteChat,
 };

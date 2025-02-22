@@ -17,9 +17,9 @@ export const classNames = (...className: string[]) => {
   return className.filter(Boolean).join(" ");
 };
 
-export const debounce = (func:(...args:unknown[])=>void, delay:number) => {
-  let timeoutId:number;
-  return (...args:unknown[]) => {
+export const debounce = (func: (...args: unknown[]) => void, delay: number) => {
+  let timeoutId: number;
+  return (...args: unknown[]) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       func(...args);
@@ -37,6 +37,7 @@ export const refresh = async () => {
       ...pre,
       accessToken: response.data.accessToken,
       id: response.data.id,
+      roles:response.data.roles
     }));
 
     return response.data.accessToken;
@@ -45,9 +46,8 @@ export const refresh = async () => {
   }
 };
 
-
- export function customToast(text:string){
-  return toast(text,{
+export function customToast(text: string) {
+  return toast(text, {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -55,12 +55,12 @@ export const refresh = async () => {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: isDarkMode()?"dark":"light",
+    theme: isDarkMode() ? "dark" : "light",
     transition: Bounce,
-    })
+  });
 }
-export function customToastError(text:string){
-  return toast.error(text,{
+export function customToastError(text: string) {
+  return toast.error(text, {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -68,18 +68,24 @@ export function customToastError(text:string){
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: isDarkMode()?"dark":"light",
+    theme: isDarkMode() ? "dark" : "light",
     transition: Bounce,
-    })
+  });
 }
-export function isDarkMode(){
-  return localStorage.getItem("dark-mode")==="true"
-};
-
-export const formatDate =(date:Date)=> new Intl.DateTimeFormat('en-US',  {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-  hour:"2-digit",
-  minute:"2-digit"
-}).format(date);
+export function isDarkMode() {
+  return localStorage.getItem("dark-mode") === "true";
+}
+export function isAuthorized(roles: ("Admin" | "User" | "Staff")[]) {
+  const auth = useAuthStore.getState();
+ 
+  
+  return auth.roles.length && auth.roles.some((role) => roles.includes(role));
+}
+export const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);

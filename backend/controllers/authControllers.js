@@ -16,10 +16,14 @@ const loginContoller = expressAsyncHandler(async (req, res) => {
   }
 
   const user = await db.user.findFirst({
-    where: { email: data.email }});
+    where: { email: data.email },
+  });
   if (!user) return res.status(401).json({ error: "You are not authorized" });
 
-  const isValidPassword = await verifyPassword(data.password, user.password.trim());
+  const isValidPassword = await verifyPassword(
+    data.password,
+    user.password.trim()
+  );
   if (!isValidPassword)
     return res.status(401).json({ error: "You are not authorized" });
 
@@ -55,7 +59,7 @@ const loginContoller = expressAsyncHandler(async (req, res) => {
   return res.json({
     accessToken,
     id: user.id,
-    roles:user.roles.split(","),
+    roles: user.roles.split(","),
     currentChatId: user.currentChatId,
   });
 });
@@ -74,7 +78,7 @@ const refreshController = expressAsyncHandler(async (req, res) => {
       }
 
       const user = await db.user.findUnique({
-        where: { id: decoded.id }
+        where: { id: decoded.id },
       });
 
       if (!user) return res.status(403).json({ error: "Forbidden" });

@@ -4,11 +4,13 @@ import { RegisterFormInputs } from "../pages/Register.tsx";
 export type Auth = {
   accessToken: string | null;
   id: string | null;
+  roles: ("Admin" | "Staff" | "User")[];
 };
 
 const useAuthStore = create<Auth>(() => ({
   accessToken: null,
   id: null,
+  roles: [],
 }));
 
 export async function login(data: {
@@ -23,21 +25,28 @@ export async function login(data: {
         ...pre,
         accessToken: response.data.accessToken,
         id: response.data.id,
+        roles: response.data.roles,
       };
     });
+    return response;
   } catch (error) {
     console.log(error);
   }
 }
-export async function register(data:RegisterFormInputs) {
+export async function register(data: RegisterFormInputs) {
   await api.post("/api/register", data);
-  await login(data);
+  return await login(data);
 }
 
 export async function logOut() {
   await api.get("/api/auth", { withCredentials: true });
 
-  useAuthStore.setState((pre) => ({ ...pre, accessToken: null, id: null }));
+  useAuthStore.setState((pre) => ({
+    ...pre,
+    accessToken: null,
+    id: null,
+    roles: [],
+  }));
 }
 
 export default useAuthStore;

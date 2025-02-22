@@ -102,7 +102,7 @@ if(modalProps.title && modalProps.users){
             className="w-full dark:bg-zinc-800 px-2  py-3"
             id="title"
             value={title as string}
-            defaultValue={title as string}
+           
             onChange={(e) => {
               setErrors([]);
               setTitle(e.target.value);
@@ -123,10 +123,7 @@ if(modalProps.title && modalProps.users){
               value: user.id,
               label: user.email,
             }))}
-            defaultValue={users.map((user) => ({
-              value: user.id,
-              label: user.email,
-            }))}
+         
             isMulti
             styles={{
               control: (baseStyles) => ({

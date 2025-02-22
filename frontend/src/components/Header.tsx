@@ -9,7 +9,7 @@ import useSidebarStateStore, {
 } from "../state/sidebarStateStore.ts";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { customToast } from "../lib/utils.ts";
+import { customToast, isAuthorized } from "../lib/utils.ts";
 
 import ProfileImage from "./ProfileImage.tsx";
 import { Link } from "react-router-dom";
@@ -34,6 +34,7 @@ function Header() {
         </Button>
       )}
       <h1 className="grow text-center font-bold text-2xl">Chat App</h1>
+      {isAuthorized(["Staff"]) && <Link to={"/admin"}>Admin</Link>}
       {accessToken && (
         <Button
           className="m-2"

@@ -11,6 +11,7 @@ const userSchemaWithRoles = z.object({
 });
 const asyncHandler = require("express-async-handler");
 const hashPassword = require("../utils/hashPassword");
+const { isValidRoles } = require("../utils/isValdRoles");
 
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await db.user.findMany({
@@ -38,7 +39,7 @@ const getUser = asyncHandler(async (req, res) => {
   }
   const user = await db.user.findUnique({
     where: { id },
-    select: { id: true, email: true, chats: true, profilePic: true },
+    select: { id: true, email: true, chats: true,roles:true, profilePic: true },
   });
 
   if (!user)
@@ -100,17 +101,17 @@ const updateUser = asyncHandler(async (req, res) => {
       });
     }
     if (!data.roles.length)
-      return res.status(401).json({
+      return res.status(400).json({
         errors: [
           {
-            message: "Unauthorized",
+            message: "Invalid roles",
           },
         ],
       });
 
     const roles = Array.from(new Set([...data.roles]));
-    console.log(roles);
-
+    if (!isValidRoles(roles))
+      return res.status(400).json({ message: "Invalid Roles." });
     if (data.password) {
       const hashedPassword = await hashPassword(data.password);
       const updatedUser = await db.user.update({
@@ -121,7 +122,7 @@ const updateUser = asyncHandler(async (req, res) => {
           roles: roles.join(","),
         },
       });
-      return res.json(updatedUser);
+      return res.json({ message: "User updated Sucessfully" });
     }
 
     const updatedUser = await db.user.update({

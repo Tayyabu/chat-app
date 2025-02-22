@@ -16,7 +16,7 @@ const createMessage = (io, socket) => async (chatId, content) => {
     chatId,
     content,
   });
-  if (success === false) {
+  if (!success) {
     io.to(chatId).emit("error-message", error);
   }
 
@@ -61,7 +61,7 @@ const deleteChat =
 const createChat = (socket) => async (data) => {
   const { data: chatData, success, error } = chatSchema.safeParse(data);
 
-  if (success === true) {
+  if (success) {
     const duplicate = await db.chat.findFirst({
       where: { title: chatData.title },
     });
@@ -115,7 +115,7 @@ const createChat = (socket) => async (data) => {
 const updateChat = (socket) => async (data) => {
   const { data: chatData, success, error } = chatUpdateSchema.safeParse(data);
 
-  if (success === true) {
+  if (success ) {
     const exists = await db.chat.findUnique({
       where: { id: chatData.id },
     });

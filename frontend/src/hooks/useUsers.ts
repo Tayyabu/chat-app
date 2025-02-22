@@ -3,7 +3,8 @@ import {useQuery} from "@tanstack/react-query";
 export type User = {
     id: string;
     email: string;
-    profilePic:string
+    profilePic:string;
+    roles:string[]
 };
 export function useUsers() {
     return useQuery({
