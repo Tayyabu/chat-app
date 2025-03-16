@@ -90,7 +90,7 @@ function Users() {
   return (
     <div className="h-screen  ">
       <div className="container flex justify-center ">
-        <h2 className="text-4xl mt-5 font-semibold px-5">Messages</h2>
+        <h2 className="text-4xl mt-5 font-semibold px-5">Users</h2>
       </div>
       {user && <UserForm onSubmit={onSubmit} setUser={setUser} user={user} />}
       {!data?.length && isLoading ? (
